@@ -8,7 +8,7 @@ const HOST = os.hostname();
 const app = express();
 app.get('/', (req, res) => {
   res.send(
-    `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Hello from ${HOST}</h1></body>`
+    `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Hello AWS from ${HOST}</h1></body>`
   );
 });
 app.listen(PORT, HOST);
