@@ -1,0 +1,23 @@
+{
+  "name": "testecs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vfa-phucnd/Test-ECS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vfa-phucnd/Test-ECS/issues"
+  },
+  "homepage": "https://github.com/vfa-phucnd/Test-ECS#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
