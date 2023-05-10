@@ -11,9 +11,9 @@ pipeline {
     agent any
 	
     environment {
-        DOCKER_REGISTRY = 'https://hub.docker.com'
+        DOCKER_REGISTRY = 'https://registry-1.docker.io'
         DOCKER_IMAGE_NAME = "ndp1632000/test-gitops"
-        DOCKER_IMAGE = "hub.docker.com/${DOCKER_IMAGE_NAME}"
+        DOCKER_IMAGE = "registry-1.docker.io/${DOCKER_IMAGE_NAME}"
     }
 
     stages {
