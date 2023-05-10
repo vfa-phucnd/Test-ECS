@@ -52,6 +52,8 @@ pipeline {
 		steps {
 			withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 			sh """#!/bin/bash
+				echo $GIT_PASSWORD
+				echo $GIT_USERNAME
 				[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
 				git clone ${gitopsRepo} --branch ${gitopsBranch}
 				cd ${helmRepo}
