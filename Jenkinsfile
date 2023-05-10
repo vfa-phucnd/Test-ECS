@@ -53,7 +53,7 @@ pipeline {
 			withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 				sh """#!/bin/bash
 					[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-					git remote set-url origin https://{GIT_USERNAME}:{GIT_PASSWORD}@github.com/{GIT_USERNAME}/test-gitops.git
+					git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git
 					git clone ${gitopsRepo} --branch ${gitopsBranch}
 					cd ${helmRepo}
 					sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
