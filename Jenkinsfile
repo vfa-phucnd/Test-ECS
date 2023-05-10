@@ -7,6 +7,12 @@ def dockerhubAccount = 'dockerhub'
 buildFolder = './'
 def version = "v0.${BUILD_NUMBER}"
 
+def gitopsRepo = 'https://github.com/vfa-phucnd/test-gitops.git'
+def gitopsBranch = 'master'
+
+def helmRepo = "test-gitops"
+def helmValueFile = "test-gitops-app/test-gitops-values.yaml"
+
 pipeline {
     agent any
 	
@@ -42,15 +48,20 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                echo 'Testing ne'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying ne'
-            }
+        stage('Deploy to gitops repo') {
+		steps {
+			withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+			sh """#!/bin/bash
+				[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+				git clone ${gitopsRepo} --branch ${gitopsBranch}
+				cd ${helmRepo}
+				sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
+				git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vfa-phucnd/test-gitops.git
+				cd ..
+				[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+				"""		
+			}				
+            	}
         }
     }
 }
