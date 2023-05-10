@@ -51,17 +51,17 @@ pipeline {
         stage('Deploy to gitops repo') {
 		steps {
 			withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-			sh """#!/bin/bash
-				echo $GIT_PASSWORD
-				echo $GIT_USERNAME
-				[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-				git clone ${gitopsRepo} --branch ${gitopsBranch}
-				cd ${helmRepo}
-				sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
-				git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/vfa-phucnd/test-gitops.git
-				cd ..
-				[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-				"""		
+				def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+				echo $encodedPassword
+				sh """#!/bin/bash
+					[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+					git clone ${gitopsRepo} --branch ${gitopsBranch}
+					cd ${helmRepo}
+					sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
+					git add . ; git commit -m "Update to version ${version}";git push https://${GIT_USERNAME}:${encodedPassword}@github.com/vfa-phucnd/test-gitops.git
+					cd ..
+					[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+				"""
 			}				
             	}
         }
