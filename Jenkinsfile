@@ -36,8 +36,15 @@ pipeline {
             steps {
                 script {
                     sh "git reset --hard"
-                    sh "git clean -f"                    
-		    app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
+                    sh "git clean -f"
+              
+		            echo DB_USERNAME=${DB_USERNAME} >> .env
+                    echo DB_ENDPOINT=${DB_ENDPOINT} >> .env
+                    echo DB_DATABASE=${DB_DATABASE} >> .env
+                    echo DB_PASSWORD=${DB_PASSWORD} >> .env
+                    cat .env
+
+                    app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
                     docker.withRegistry(DOCKER_REGISTRY, dockerhubAccount) {
                        app.push(version)
                     }
