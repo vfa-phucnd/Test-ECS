@@ -5,7 +5,7 @@ require('dotenv').config();
 const PORT = 80;
 const HOST = os.hostname();
 
-const { Client } = require('pg')
+const { Client, Pool } = require('pg')
 const credentials = {
   user: process.env.DB_USERNAME,
   host: process.env.DB_ENDPOINT,
