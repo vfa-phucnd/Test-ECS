@@ -1,5 +1,6 @@
 const express = require('express');
 const os = require('os');
+require('dotenv').config();
 
 const PORT = 80;
 const HOST = os.hostname();
@@ -11,18 +12,27 @@ const client = new Client({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  connectionTimeoutMillis: 1000,
+  query_timeout: 1000,
 })
 client.connect(function(err) {
-  if (err) throw err;
+  if (err) console.log(err);
   console.log("Connected!");
 });
 
 // App
 const app = express();
 app.get('*', (req, res) => {
-  res.send(
-    `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Hello AWS from ${HOST}</h1></body>`
-  );
+  client.query("select * from information_schema.tables", (error, results) => {
+    if (error) {
+      res.send(
+        `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Error: ${JSON.stringify(error)}</h1></body>`
+      );
+    }
+    res.send(
+      `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Hello AWS from ${HOST} - ${JSON.stringify(results)}</h1></body>`
+    );
+  })
 });
 app.listen(PORT, HOST);
 
