@@ -20,7 +20,7 @@ const client = new Client({
   host: process.env.DB_ENDPOINT,
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  port: Number(process.env.DB_PORT),
   connectionTimeoutMillis: 1000,
   query_timeout: 1000,
 })
