@@ -51,7 +51,6 @@ app.get('*', async (req, res) => {
         <h1 style='color: orange;text-align:center'>${clientQuery}</h1>
       </body>`
     );
-  })
 });
 app.listen(PORT, HOST);
 
