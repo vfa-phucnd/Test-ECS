@@ -37,12 +37,11 @@ pipeline {
                 script {
                     sh "git reset --hard"
                     sh "git clean -f"
-              
-		            echo DB_USERNAME=${DB_USERNAME} >> .env
-                    echo DB_ENDPOINT=${DB_ENDPOINT} >> .env
-                    echo DB_DATABASE=${DB_DATABASE} >> .env
-                    echo DB_PASSWORD=${DB_PASSWORD} >> .env
-                    cat .env
+                    sh "echo DB_USERNAME=${DB_USERNAME} >> .env"
+                    sh "echo DB_ENDPOINT=${DB_ENDPOINT} >> .env"
+                    sh "echo DB_DATABASE=${DB_DATABASE} >> .env"
+                    sh "echo DB_PASSWORD=${DB_PASSWORD} >> .env"
+                    sh "cat .env"
 
                     app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
                     docker.withRegistry(DOCKER_REGISTRY, dockerhubAccount) {
@@ -56,8 +55,8 @@ pipeline {
         }
 
         stage('Deploy to gitops repo') {
-		steps {
-			withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+		    steps {
+                withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 				sh """#!/bin/bash
 					[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
 					git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git --branch ${gitopsBranch}
