@@ -41,6 +41,7 @@ pipeline {
                     sh "echo DB_ENDPOINT=${DB_ENDPOINT} >> .env"
                     sh "echo DB_DATABASE=${DB_DATABASE} >> .env"
                     sh "echo DB_PASSWORD=${DB_PASSWORD} >> .env"
+                    sh "echo DB_PORT=${DB_PORT} >> .env"
                     sh "cat .env"
 
                     app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
