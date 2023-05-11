@@ -6,40 +6,50 @@ const PORT = 80;
 const HOST = os.hostname();
 
 const { Client } = require('pg')
-console.log({
-  user: process.env.DB_USERNAME,
-  host: process.env.DB_ENDPOINT,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  connectionTimeoutMillis: 1000,
-  query_timeout: 1000,
-})
-const client = new Client({
+const credentials = {
   user: process.env.DB_USERNAME,
   host: process.env.DB_ENDPOINT,
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: Number(process.env.DB_PORT),
-  connectionTimeoutMillis: 1000,
-  query_timeout: 1000,
-})
-client.connect(function(err) {
-  if (err) console.log(err);
-  console.log("Connected!");
-});
+};
+
+// Connect with a connection pool.
+
+async function poolDemo() {
+  const pool = new Pool(credentials);
+  const now = await pool.query("SELECT NOW()");
+  await pool.end();
+
+  return now;
+}
+
+// Connect with a client.
+
+async function clientDemo() {
+  const client = new Client(credentials);
+  await client.connect();
+  const now = await client.query("SELECT NOW()");
+  await client.end();
+
+  return now;
+}
 
 // App
 const app = express();
-app.get('*', (req, res) => {
-  client.query("select * from information_schema.tables", (error, results) => {
-    if (error) {
-      res.send(
-        `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Error: ${JSON.stringify(error)}</h1></body>`
-      );
-    }
+app.get('*', async (req, res) => {
+  const poolResult = await poolDemo();
+  const poolQuery = "Time with pool: " + poolResult.rows[0]["now"];
+
+  const clientResult = await clientDemo();
+  const clientQuery = "Time with client: " + clientResult.rows[0]["now"];
+
     res.send(
-      `<body style='background-color:#283E5B'><h1 style='color: orange;text-align:center'>Hello AWS from ${HOST} - ${JSON.stringify(results)}</h1></body>`
+      `<body style='background-color:#283E5B'>
+        <h1 style='color: orange;text-align:center'>Hello AWS from ${HOST}</h1>
+        <h1 style='color: orange;text-align:center'>${poolQuery}</h1>
+        <h1 style='color: orange;text-align:center'>${clientQuery}</h1>
+      </body>`
     );
   })
 });
