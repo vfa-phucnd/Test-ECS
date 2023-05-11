@@ -6,6 +6,15 @@ const PORT = 80;
 const HOST = os.hostname();
 
 const { Client } = require('pg')
+console.log({
+  user: process.env.DB_USERNAME,
+  host: process.env.DB_ENDPOINT,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  connectionTimeoutMillis: 1000,
+  query_timeout: 1000,
+})
 const client = new Client({
   user: process.env.DB_USERNAME,
   host: process.env.DB_ENDPOINT,
