@@ -26,7 +26,7 @@ pipeline {
         stage('Init source connection') {
             steps {
                 echo "checkout project"
-		git branch: sourceBranch,
+		        git branch: sourceBranch,
                     credentialsId: githubAccount,
                     url: sourceRepo				
             }
@@ -34,14 +34,13 @@ pipeline {
         
         stage('Build') {
             steps {
+                withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'DB_PASSWORD', usernameVariable: 'DB_USERNAME')]) {
+                    sh "echo DB_USERNAME=${DB_USERNAME} >> .env"
+                    sh "echo DB_PASSWORD=${DB_PASSWORD} >> .env"                }
+
                 script {
                     sh "git reset --hard"
                     sh "git clean -f"
-                    sh "echo DB_USERNAME=${DB_USERNAME} >> .env"
-                    sh "echo DB_ENDPOINT=${DB_ENDPOINT} >> .env"
-                    sh "echo DB_DATABASE=${DB_DATABASE} >> .env"
-                    sh "echo DB_PASSWORD=${DB_PASSWORD} >> .env"
-                    sh "echo DB_PORT=${DB_PORT} >> .env"
                     sh "cat .env"
 
                     app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
@@ -58,19 +57,19 @@ pipeline {
         stage('Deploy to gitops repo') {
 		    steps {
                 withCredentials([usernamePassword(credentialsId: 'gitops-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-				sh """#!/bin/bash
-					[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-					git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git --branch ${gitopsBranch}
-					cd ${helmRepo}
-					sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
-					git add .
-					git commit -m "Update to version ${version}"
-					git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git
-					cd ..
-					[[ -d ${helmRepo} ]] && rm -r ${helmRepo}
-				"""
-			}				
-            	}
+                    sh """#!/bin/bash
+                        [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+                        git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git --branch ${gitopsBranch}
+                        cd ${helmRepo}
+                        sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
+                        git add .
+                        git commit -m "Update to version ${version}"
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git
+                        cd ..
+                        [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+                    """
+                }
+            }
         }
     }
 }
