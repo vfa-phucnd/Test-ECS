@@ -35,13 +35,14 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'DB_PASSWORD', usernameVariable: 'DB_USERNAME')]) {
-                    sh "echo DB_USERNAME=${DB_USERNAME} >> .env"
-                    sh "echo DB_PASSWORD=${DB_PASSWORD} >> .env"
+                    sh 'echo "\nDB_USERNAME=${DB_USERNAME}" >> .env'
+                    sh 'echo "\nDB_PASSWORD=${DB_PASSWORD}" >> .env'
                     sh "cat .env"
                 }
 
                 script {
-                    sh "git reset --hard"
+                    // sh "git reset --hard"
+                    // sh "git clean -f"
                     sh "cat .env"
 
                     app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
