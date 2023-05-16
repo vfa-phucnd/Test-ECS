@@ -28,10 +28,10 @@ pipeline {
                 echo "checkout project"
 		        git branch: sourceBranch,
                     credentialsId: githubAccount,
-                    url: sourceRepo				
+                    url: sourceRepo
             }
         }
-        
+
         stage('Build') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'DB_PASSWORD', usernameVariable: 'DB_USERNAME')]) {
