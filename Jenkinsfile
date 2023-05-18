@@ -1,7 +1,7 @@
 def sourceRepo = 'git@github.com:vfa-phucnd/Test-ECS.git'
 def sourceBranch = 'main'
 
-def githubAccount = 'cd27fbe4-022d-4f50-8797-a4cca412ca87'
+def githubAccount = 'github-ssh-source'
 def dockerhubAccount = 'dockerhub'
 
 buildFolder = './'
@@ -17,9 +17,9 @@ pipeline {
     agent any
 	
     environment {
-        DOCKER_REGISTRY = 'https://registry-1.docker.io'
+        DOCKER_REGISTRY = 'https://registry.fke.fptcloud.com'
         DOCKER_IMAGE_NAME = "ndp1632000/test-gitops"
-        DOCKER_IMAGE = "registry-1.docker.io/${DOCKER_IMAGE_NAME}"
+        DOCKER_IMAGE = "registry.fke.fptcloud.com/${DOCKER_IMAGE_NAME}"
     }
 
     stages {
