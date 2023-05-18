@@ -8,7 +8,7 @@ buildFolder = './'
 def version = "v0.${BUILD_NUMBER}"
 
 def gitopsRepo = 'https://github.com/vfa-phucnd/test-gitops.git'
-def gitopsBranch = 'master' 
+def gitopsBranch = 'master'
 
 def helmRepo = "test-gitops"
 def helmValueFile = "test-gitops-app/test-gitops-values.yaml"
@@ -34,10 +34,10 @@ pipeline {
 
         stage('Build') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'DB_PASSWORD', usernameVariable: 'DB_USERNAME')]) {
-                    sh 'echo "\nDB_USERNAME=${DB_USERNAME}" >> .env'
-                    sh 'echo "\nDB_PASSWORD=${DB_PASSWORD}" >> .env'
-                }
+                // withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'DB_PASSWORD', usernameVariable: 'DB_USERNAME')]) {
+                //     sh 'echo "\nDB_USERNAME=${DB_USERNAME}" >> .env'
+                //     sh 'echo "\nDB_PASSWORD=${DB_PASSWORD}" >> .env'
+                // }
 
                 script {
                     app = docker.build(DOCKER_IMAGE_NAME, buildFolder)
