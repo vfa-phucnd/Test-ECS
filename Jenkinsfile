@@ -18,7 +18,7 @@ pipeline {
 	
     environment {
         DOCKER_REGISTRY = 'https://registry.fke.fptcloud.com'
-        DOCKER_IMAGE_NAME = "ndp1632000/test-gitops"
+        DOCKER_IMAGE_NAME = "9eb0f205-5206-4f41-8547-91b835251d52/test-gitops"
         DOCKER_IMAGE = "registry.fke.fptcloud.com/${DOCKER_IMAGE_NAME}"
     }
 
