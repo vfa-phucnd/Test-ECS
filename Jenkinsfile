@@ -11,7 +11,7 @@ def gitopsRepo = 'https://github.com/vfa-phucnd/test-gitops.git'
 def gitopsBranch = 'master'
 
 def helmRepo = "test-gitops"
-def helmValueFile = "test-gitops-app/test-gitops-values.yaml"
+def helmValueFile = "test-gitops-app/test-gitops-values.yaml" 
 
 pipeline {
     agent any
