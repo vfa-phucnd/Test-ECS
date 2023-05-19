@@ -60,6 +60,7 @@ pipeline {
                         [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
                         git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git --branch ${gitopsBranch}
                         cd ${helmRepo}
+                        cat $helmValueFile
                         sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
                         git add .
                         git commit -m "Update to version ${version}"
