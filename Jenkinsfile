@@ -58,6 +58,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: gitopsAccount, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     sh """#!/bin/bash
                         [[ -d ${helmRepo} ]] && rm -r ${helmRepo}
+                        git config user.email "phucnd@vitalify.asia"
                         git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/test-gitops.git --branch ${gitopsBranch}
                         cd ${helmRepo}
                         sed -i 's|  tag: .*|  tag: "${version}"|' ${helmValueFile}
