@@ -39,15 +39,17 @@ async function clientDemo() {
 const app = express();
 app.get('*', async (req, res) => {
   try {
-    // const poolResult = await poolDemo();
-    // const poolQuery = "Time with pool: " + poolResult.rows[0]["now"];
+    const poolResult = await poolDemo();
+    const poolQuery = "Time with pool: " + poolResult.rows[0]["now"];
   
-    // const clientResult = await clientDemo();
-    // const clientQuery = "Time with client: " + clientResult.rows[0]["now"];
+    const clientResult = await clientDemo();
+    const clientQuery = "Time with client: " + clientResult.rows[0]["now"];
 
     res.send(
       `<body style='background-color:#283E5B'>
         <h1 style='color: orange;text-align:center'>Hello AWS from ${HOST}</h1>
+        <h1 style='color: orange;text-align:center'>${poolQuery}</h1>
+        <h1 style='color: orange;text-align:center'>${clientQuery}</h1>
       </body>`
     );
   } catch (error) {
