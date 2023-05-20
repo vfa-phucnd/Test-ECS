@@ -45,6 +45,9 @@ app.get('*', async (req, res) => {
     const clientResult = await clientDemo();
     const clientQuery = "Time with client: " + clientResult.rows[0]["now"];
 
+    console.log(poolQuery);
+    console.log(clientQuery);
+
     res.send(
       `<body style='background-color:#283E5B'>
         <h1 style='color: orange;text-align:center'>Hello AWS from ${HOST}</h1>
